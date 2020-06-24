@@ -1,0 +1,38 @@
+import React, { useContext } from 'react'
+import {observer} from 'mobx-react-lite'
+import ActivityList from '../list/ActivityList'
+import { Grid } from 'semantic-ui-react'
+import ActivityDetail from '../detail/ActivityDetail'
+import ActivityStore from '../../../app/stores/activityStore'
+import ActivityForm from '../form/ActivityForm'
+
+
+
+const ActivityDashboard = () => {
+
+    const activityStore = useContext(ActivityStore);
+    const {selectedActivity, editMode} = activityStore
+    return (
+        <Grid>
+            <Grid.Column width={10}>
+               <ActivityList />
+           </Grid.Column>
+           <Grid.Column width={6}>
+                {
+                    selectedActivity && !editMode &&
+                   <ActivityDetail />
+                }
+
+                {
+                    editMode && 
+                    <ActivityForm 
+                        key={selectedActivity && selectedActivity.id || 0}
+                        activity = {selectedActivity!} />
+                } 
+
+           </Grid.Column>
+        </Grid>
+    )
+}
+
+export default observer(ActivityDashboard)
