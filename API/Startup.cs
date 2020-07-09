@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Middleware;
 using Application.Activities;
 using Application.Test;
+using Domain;
+using FluentValidation.AspNetCore;
+//using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,16 +48,20 @@ namespace API
 
             services.AddScoped<IActivitiesService, ActivitiesService>();
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
+                //.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             //app.UseHttpsRedirection();
 

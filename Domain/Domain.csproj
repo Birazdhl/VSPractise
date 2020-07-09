@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="EnterpriseLibrary.Validation" Version="6.0.1304" />
+    <PackageReference Include="FluentValidation" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>

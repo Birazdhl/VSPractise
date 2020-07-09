@@ -3,35 +3,35 @@ import { Container } from 'semantic-ui-react';
 import NavBar from '../../features/nav/NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { observer } from 'mobx-react-lite';
-import { Route, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Route, withRouter, RouteComponentProps, Switch } from 'react-router-dom';
 import HomePage from '../../features/home/HomePage';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetail from '../../features/activities/detail/ActivityDetail';
+import { ToastContainer } from 'react-toastify';
+import NotFound from './NotFound';
 
-const App: React.FC<RouteComponentProps> = ({location}) => {
+const App: React.FC<RouteComponentProps> = ({ location }) => {
 
-  return(
-
-    <Fragment>
+  return (
+    <Fragment >
+      <ToastContainer position='top-center' />
       <Route exact path='/' component={HomePage} />
-
       <Route path={'/(.+)'} render={() => (
-           <Fragment>
-           <NavBar />
-           <Container style={{ marginTop: '7em' }}>
-              <Route exact path ='/' component={HomePage} />
-              <Route exact path ='/activities' component={ActivityDashboard} />
+        <Fragment>
+          <NavBar />
+          <Container style={{ marginTop: '7em' }}>
+            <Switch>
+              <Route exact path='/' component={HomePage} />
+              <Route exact path='/activities' component={ActivityDashboard} />
               <Route path='/activities/:id' component={ActivityDetail} />
-              <Route key={location.key} path={['/createActivity','/manage/:id']} component={ActivityForm} />
-           </Container>    
-           </Fragment>
+              <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
+              <Route component={NotFound} />
+            </Switch>
+
+          </Container>
+        </Fragment>
       )} />
-
-   
     </Fragment>
-
-      
-
   )
 }
 

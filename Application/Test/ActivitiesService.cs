@@ -1,9 +1,12 @@
-﻿using Application.Result;
+﻿using Application.Errors;
+using Application.Result;
 using Domain;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +21,7 @@ namespace Application.Test
             _dataContext = dataContext;
         }
 
+
         public async Task<List<Activity>> GetActivitiesList()
         {
             var result = await _dataContext.Activities.ToListAsync();
@@ -27,6 +31,10 @@ namespace Application.Test
         public async Task<Activity> GetActivityById(Guid id)
         {
             var acitvity = await _dataContext.Activities.FindAsync(id);
+
+            if (acitvity == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { activity = "Activity Not Found" });
+
             return acitvity;
         }
 
@@ -48,9 +56,14 @@ namespace Application.Test
 
         public async Task<AccountResult> DeleteActivity(Guid id)
         {
+
             var resultMessage = new AccountResult();
 
             var activity = await _dataContext.Activities.FindAsync(id);
+
+            if(activity == null)
+                throw new RestException(HttpStatusCode.NotFound, new { activity = "Activity Not Found" });
+
             _dataContext.Remove(activity);
 
             var success = _dataContext.SaveChanges() > 0;

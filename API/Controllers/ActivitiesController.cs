@@ -18,6 +18,7 @@ namespace API.Controllers
         public ActivitiesController(IActivitiesService activitiesService)
         {
             _activitiesService = activitiesService;
+
         }
 
         [HttpGet]
