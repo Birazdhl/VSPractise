@@ -3,7 +3,7 @@ import { IActivity } from "../Models/activity";
 import { history } from "../..";
 import { toast } from "react-toastify";
 
-axios.defaults.baseURL = "https://localhost:44396/api";
+axios.defaults.baseURL = "https://localhost:44396/api/activities";
 
 axios.interceptors.response.use(undefined, (error) => {
   if (error.message === "Network Error" && !error.response) {
@@ -25,6 +25,7 @@ axios.interceptors.response.use(undefined, (error) => {
   if (status === 500) {
     toast.error("Server error- check the terminal for more error");
   }
+  throw error;
 });
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -44,13 +45,12 @@ const requests = {
 };
 
 const Activities = {
-  list: (): Promise<IActivity[]> => requests.get("/activities/GetActivityList"),
-  details: (id: string) => requests.get(`/activities/GetActivity/${id}`),
-  create: (activity: IActivity) =>
-    requests.post("/activities/CreateActivity", activity),
+  list: (): Promise<IActivity[]> => requests.get("/GetActivityList"),
+  details: (id: string) => requests.get(`/GetActivity/${id}`),
+  create: (activity: IActivity) => requests.post("/CreateActivity", activity),
   update: (activity: IActivity) =>
-    requests.post(`/activities/EditActivity`, activity),
-  delete: (id: string) => requests.get(`/activities/DeleteAtivity/${id}`),
+    requests.put(`/EditActivity/${activity.id}`, activity),
+  delete: (id: string) => requests.del(`/DeleteAtivity/${id}`),
 };
 
 export default {
